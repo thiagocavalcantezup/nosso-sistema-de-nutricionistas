@@ -47,7 +47,7 @@ public class NutricionistaDTO {
     }
 
     public Nutricionista paraNutricionista() {
-        String novoCrn = cpf.replaceAll("[^0-9A-Z/]", "");
+        String novoCrn = crn.replaceAll("[^0-9A-Z/\\-, ]", "");
         String novoCpf = cpf.replaceAll("[^0-9]", "");
 
         return new Nutricionista(novoCrn, nome, novoCpf, dataNascimento, email);
