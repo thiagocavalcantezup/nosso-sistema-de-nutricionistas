@@ -1,6 +1,5 @@
 package br.com.zup.edu.nutricionistas.exceptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -20,27 +19,17 @@ public class CustomExceptionHandler {
         Integer codigoHttp = badRequestStatus.value();
         String mensagemHttp = badRequestStatus.getReasonPhrase();
 
-        List<String> mensagens = new ArrayList<>();
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            String field = fieldError.getField();
-
-            if (field.equals("dataNascimento")) {
-                field = "data_nascimento";
-            }
-
-            mensagens.add(field + ": " + fieldError.getDefaultMessage());
-        }
-
-        String palavraErro = mensagens.size() == 1 ? "erro" : "erros";
-        String mensagemGeral = "Validação falhou com " + mensagens.size() + " " + palavraErro + ".";
+        int totalErros = fieldErrors.size();
+        String palavraErro = totalErros == 1 ? "erro" : "erros";
+        String mensagemGeral = "Validação falhou com " + totalErros + " " + palavraErro + ".";
 
         ErroPadronizado erroPadronizado = new ErroPadronizado(
-            codigoHttp, mensagemHttp, mensagemGeral, mensagens
+            codigoHttp, mensagemHttp, mensagemGeral
         );
+        fieldErrors.forEach(erroPadronizado::adicionarErro);
 
         return ResponseEntity.badRequest().body(erroPadronizado);
-
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -49,14 +38,12 @@ public class CustomExceptionHandler {
         Integer codigoHttp = badRequestStatus.value();
         String mensagemHttp = badRequestStatus.getReasonPhrase();
 
-        List<String> mensagens = new ArrayList<>();
-        mensagens.add(ex.getMostSpecificCause().toString());
-
         String mensagemGeral = "Erro de formatação JSON.";
 
         ErroPadronizado erroPadronizado = new ErroPadronizado(
-            codigoHttp, mensagemHttp, mensagemGeral, mensagens
+            codigoHttp, mensagemHttp, mensagemGeral
         );
+        erroPadronizado.adicionarErro(ex.getMostSpecificCause().toString());
 
         return ResponseEntity.badRequest().body(erroPadronizado);
     }
