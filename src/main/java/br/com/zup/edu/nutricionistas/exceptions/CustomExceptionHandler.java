@@ -43,4 +43,22 @@ public class CustomExceptionHandler {
 
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErroPadronizado> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+        HttpStatus badRequestStatus = HttpStatus.BAD_REQUEST;
+        Integer codigoHttp = badRequestStatus.value();
+        String mensagemHttp = badRequestStatus.getReasonPhrase();
+
+        List<String> mensagens = new ArrayList<>();
+        mensagens.add(ex.getMostSpecificCause().toString());
+
+        String mensagemGeral = "Erro de formatação JSON.";
+
+        ErroPadronizado erroPadronizado = new ErroPadronizado(
+            codigoHttp, mensagemHttp, mensagemGeral, mensagens
+        );
+
+        return ResponseEntity.badRequest().body(erroPadronizado);
+    }
+
 }
