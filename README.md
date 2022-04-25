@@ -1,6 +1,6 @@
 # Nosso Sistema de Nutricionista
 
-O objetivo deste projeto é que as atividades do `Treinamento de CRUD e Relacionamentos` 
+O objetivo deste projeto é que as atividades do `Treinamento de Testes de Integração com Spring Boot` 
 
 ## Dicas
 
