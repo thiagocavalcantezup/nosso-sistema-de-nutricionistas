@@ -2,6 +2,7 @@ package br.com.zup.edu.nutricionistas.controller;
 
 import br.com.zup.edu.nutricionistas.model.Nutricionista;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.Email;
@@ -19,6 +20,7 @@ public class NutricionistaRequest {
     private String email;
 
     @NotBlank
+    @JsonProperty("CRN")
     private String CRN;
 
     @NotBlank
@@ -36,6 +38,10 @@ public class NutricionistaRequest {
         this.CRN = CRN;
         this.cpf = cpf;
         this.dataNascimento = dataNascimento;
+    }
+
+    @Deprecated
+    public NutricionistaRequest() {
     }
 
     public String getNome() {
